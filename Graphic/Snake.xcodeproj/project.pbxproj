@@ -343,7 +343,7 @@
 				TargetAttributes = {
 					FAB50FC21A15599A00623D6C = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = JQNK74493B;
+						DevelopmentTeam = VC346ZAH77;
 						LastSwiftMigration = 0820;
 					};
 					FAB50FDB1A15599A00623D6C = {
@@ -562,12 +562,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = JQNK74493B;
+				DEVELOPMENT_TEAM = VC346ZAH77;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Snake/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.studio.snake.100;
+				PRODUCT_BUNDLE_IDENTIFIER = com.graphic.snake.100;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Snake/Snake-Bridging-Header.h";
@@ -583,12 +583,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = JQNK74493B;
+				DEVELOPMENT_TEAM = VC346ZAH77;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Snake/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.studio.snake.100;
+				PRODUCT_BUNDLE_IDENTIFIER = com.graphic.snake.100;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Snake/Snake-Bridging-Header.h";
