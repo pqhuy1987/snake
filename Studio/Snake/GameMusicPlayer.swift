@@ -11,13 +11,13 @@ import AVFoundation
 
 class GameMusicPlayer : NSObject, AVAudioPlayerDelegate {
     
-    var titleMusicPlayer = try! AVAudioPlayer(contentsOfURL: NSBundle.mainBundle().URLForResource("Snake Title", withExtension: "m4a")!, fileTypeHint: nil)
-    var gameOverPlayer = try! AVAudioPlayer(contentsOfURL: NSBundle.mainBundle().URLForResource("game over 1", withExtension: "m4a")!, fileTypeHint: nil)
-    var level1Player =  try! AVAudioPlayer(contentsOfURL: NSBundle.mainBundle().URLForResource("Snake 1", withExtension: "m4a")!, fileTypeHint: nil)
+    var titleMusicPlayer = try! AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "Snake Title", withExtension: "m4a")!, fileTypeHint: nil)
+    var gameOverPlayer = try! AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "game over 1", withExtension: "m4a")!, fileTypeHint: nil)
+    var level1Player =  try! AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "Snake 1", withExtension: "m4a")!, fileTypeHint: nil)
     var level2Player : AVAudioPlayer?
-    var soundFXPlayer = try! AVAudioPlayer(contentsOfURL: NSBundle.mainBundle().URLForResource("Coin", withExtension: "caf")!, fileTypeHint: nil)
-    var startFXPlayer = try! AVAudioPlayer(contentsOfURL: NSBundle.mainBundle().URLForResource("Start", withExtension: "caf")!, fileTypeHint: nil)
-    var endFXPlayer = try! AVAudioPlayer(contentsOfURL: NSBundle.mainBundle().URLForResource("End", withExtension: "caf")!, fileTypeHint: nil)
+    var soundFXPlayer = try! AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "Coin", withExtension: "caf")!, fileTypeHint: nil)
+    var startFXPlayer = try! AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "Start", withExtension: "caf")!, fileTypeHint: nil)
+    var endFXPlayer = try! AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "End", withExtension: "caf")!, fileTypeHint: nil)
     
     func playTitleMusic() {
         
@@ -129,7 +129,7 @@ class GameMusicPlayer : NSObject, AVAudioPlayerDelegate {
             
             print("prepare level 2")
         
-            level2Player = try! AVAudioPlayer(contentsOfURL: NSBundle.mainBundle().URLForResource("Tetrahedron Demo 8", withExtension: "m4a")!, fileTypeHint: nil)
+            level2Player = try! AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "Tetrahedron Demo 8", withExtension: "m4a")!, fileTypeHint: nil)
             level2Player?.prepareToPlay()
             
         }
@@ -140,10 +140,10 @@ class GameMusicPlayer : NSObject, AVAudioPlayerDelegate {
         
         super.init()
         
-        _ = try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient, withOptions: AVAudioSessionCategoryOptions())
+        _ = try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient, with: AVAudioSessionCategoryOptions())
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameMusicPlayer.stopSecondaryAudio), name: AVAudioSessionSilenceSecondaryAudioHintNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameMusicPlayer.stopSecondaryAudio), name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(GameMusicPlayer.stopSecondaryAudio), name: NSNotification.Name.AVAudioSessionSilenceSecondaryAudioHint, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(GameMusicPlayer.stopSecondaryAudio), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         
         titleMusicPlayer.numberOfLoops = -1
         gameOverPlayer.numberOfLoops = -1
@@ -156,14 +156,14 @@ class GameMusicPlayer : NSObject, AVAudioPlayerDelegate {
     
     deinit {
         
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
         
         
     }
     
     //MARK: - AVAudioPlayerDelegate -
     
-    func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool) {
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         
         // Only use player2 once at a time
         if (player == level2Player) {

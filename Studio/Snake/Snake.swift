@@ -8,13 +8,37 @@
 
 import Foundation
 import SpriteKit
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 enum Direction {
-    case None
-    case Up
-    case Down
-    case Left
-    case Right
+    case none
+    case up
+    case down
+    case left
+    case right
 }
 
 struct ChangePropagator {
@@ -70,7 +94,7 @@ class Snake: SKNode {
         headUnit = SnakeUnit(rectOfSize: CGSize(width: unitWidth, height: unitWidth))
         //headUnit.fillColor = UIColor.blackColor()
         // Allow head unit to contact food
-        headUnit.physicsBody?.contactTestBitMask |= PhysicsCategory.Wall.rawValue
+        headUnit.physicsBody?.contactTestBitMask |= PhysicsCategory.wall.rawValue
         headUnit.physicsBody?.usesPreciseCollisionDetection = true
         self.addChild(headUnit)
         
@@ -85,7 +109,7 @@ class Snake: SKNode {
         
     }
     
-    func move(direction: Direction, velocity: CGFloat) {
+    func move(_ direction: Direction, velocity: CGFloat) {
         
         // Move the head unit
         headUnit.move(direction, velocity: velocity)
@@ -110,13 +134,13 @@ class Snake: SKNode {
         
         // Loop through units and check if any unit needs to changes velocity
         var currentUnit = headUnit
-        currentUnit.update()
-        while (currentUnit.nextUnit != nil) {
+        currentUnit?.update()
+        while (currentUnit?.nextUnit != nil) {
             
-            currentUnit.enforce(distanceBetweenUnits)
+            currentUnit?.enforce(distanceBetweenUnits)
             
-            let nextUnit = currentUnit.nextUnit!
-            nextUnit.update()
+            let nextUnit = currentUnit?.nextUnit!
+            nextUnit?.update()
             
             currentUnit = nextUnit
             
@@ -124,10 +148,10 @@ class Snake: SKNode {
         
     }
     
-    func destroy(completion: Void -> Void) {
+    func destroy(_ completion: (Void) -> Void) {
         
         let unit = self.headUnit
-        unit.destroy(completion)
+        unit?.destroy(completion)
         
     }
     
@@ -138,7 +162,7 @@ class SnakeUnit: SKSpriteNode {
     var nextUnit : SnakeUnit?
     var changePropagators : [ChangePropagator] = []
     
-    private struct ClassVariables {
+    fileprivate struct ClassVariables {
         static var physicsScalingFactor : CGFloat = CGFloat(1.0)
     }
     
@@ -158,16 +182,16 @@ class SnakeUnit: SKSpriteNode {
     var direction : Direction {
         
         if (physicsBody?.velocity.dx > 0) {
-            return Direction.Right
+            return Direction.right
         } else if (physicsBody?.velocity.dx < 0) {
-            return Direction.Left
+            return Direction.left
         } else if (physicsBody?.velocity.dy > 0) {
-            return Direction.Up
+            return Direction.up
         } else if (physicsBody?.velocity.dy < 0) {
-            return Direction.Down
+            return Direction.down
         }
         
-        return Direction.None
+        return Direction.none
         
     }
     
@@ -180,13 +204,13 @@ class SnakeUnit: SKSpriteNode {
         self.size = size
         self.color = UIColor(white: 0.7, alpha: 1.0)
         
-        let physicsBody = SKPhysicsBody(rectangleOfSize: size)
+        let physicsBody = SKPhysicsBody(rectangleOf: size)
         physicsBody.mass = 1.0
         physicsBody.allowsRotation = false
-        physicsBody.collisionBitMask = PhysicsCategory.None.rawValue
-        physicsBody.categoryBitMask = PhysicsCategory.Snake.rawValue
-        physicsBody.contactTestBitMask = PhysicsCategory.Snake.rawValue
-        physicsBody.fieldBitMask = FieldCategory.None.rawValue
+        physicsBody.collisionBitMask = PhysicsCategory.none.rawValue
+        physicsBody.categoryBitMask = PhysicsCategory.snake.rawValue
+        physicsBody.contactTestBitMask = PhysicsCategory.snake.rawValue
+        physicsBody.fieldBitMask = FieldCategory.none.rawValue
         physicsBody.friction = 0.0
         physicsBody.linearDamping = 0.0
         physicsBody.charge = 0.00016
@@ -206,17 +230,17 @@ class SnakeUnit: SKSpriteNode {
         super.init(coder: aDecoder)
     }
     
-    func move(direction: Direction, velocity: CGFloat) {
+    func move(_ direction: Direction, velocity: CGFloat) {
         
         // Prevent moving in reverse
-        if (direction == Direction.Left || direction == Direction.Right) {
-            if (self.direction == Direction.Left || self.direction == Direction.Right) {
+        if (direction == Direction.left || direction == Direction.right) {
+            if (self.direction == Direction.left || self.direction == Direction.right) {
                 return
             }
         }
         
-        if (direction == Direction.Up || direction == Direction.Down) {
-            if (self.direction == Direction.Up || self.direction == Direction.Down) {
+        if (direction == Direction.up || direction == Direction.down) {
+            if (self.direction == Direction.up || self.direction == Direction.down) {
                 return
             }
         }
@@ -225,19 +249,19 @@ class SnakeUnit: SKSpriteNode {
         
         switch (direction) {
             
-        case .Up :
+        case .up :
             self.physicsBody!.velocity = CGVector(dx: 0.0, dy: velocity * multiplier)
         
-        case .Down :
+        case .down :
             self.physicsBody!.velocity = CGVector(dx: 0.0, dy: -velocity * multiplier)
             
-        case .Left :
+        case .left :
             self.physicsBody!.velocity = CGVector(dx: -velocity * multiplier, dy: 0.0)
             
-        case .Right :
+        case .right :
             self.physicsBody!.velocity = CGVector(dx: velocity * multiplier, dy: 0.0)
             
-        case .None :
+        case .none :
             break
             
         }
@@ -246,7 +270,7 @@ class SnakeUnit: SKSpriteNode {
         if (nextUnit != nil) {
             
             // If nextUnit has a velocity, create a change propagator
-            if (nextUnit!.direction != Direction.None) {
+            if (nextUnit!.direction != Direction.none) {
                 nextUnit!.changePropagators.append(ChangePropagator(location: self.position, direction: direction, velocity: velocity))
             } else {
                 // Move the next unit immediately
@@ -259,7 +283,7 @@ class SnakeUnit: SKSpriteNode {
         
     }
     
-    func enforce(distanceBetweenUnits: CGFloat) {
+    func enforce(_ distanceBetweenUnits: CGFloat) {
         
         // Only enforce if units are travelling same direction
         if (direction == nextUnit?.direction) {
@@ -271,14 +295,14 @@ class SnakeUnit: SKSpriteNode {
         
     }
     
-    func positionForNextUnit(distanceBetweenUnits: CGFloat) -> CGPoint {
+    func positionForNextUnit(_ distanceBetweenUnits: CGFloat) -> CGPoint {
         
         switch (direction) {
-        case .Down :
+        case .down :
             return CGPoint(x: self.position.x, y: self.position.y + nextUnit!.frame.size.height + distanceBetweenUnits)
-        case .Right :
+        case .right :
             return CGPoint(x: self.position.x - nextUnit!.frame.size.width - distanceBetweenUnits, y: self.position.y)
-        case .Left :
+        case .left :
             return CGPoint(x: self.position.x + nextUnit!.frame.size.width + distanceBetweenUnits, y: self.position.y)
         default :
             return CGPoint(x: self.position.x, y: self.position.y - nextUnit!.frame.size.height - distanceBetweenUnits)
@@ -290,33 +314,33 @@ class SnakeUnit: SKSpriteNode {
         
         let changePropagator = self.changePropagators.first
         
-        func runChangePropagator(changePropagator: ChangePropagator) {
+        func runChangePropagator(_ changePropagator: ChangePropagator) {
             
             self.position = changePropagator.location
             self.move(changePropagator.direction, velocity: changePropagator.velocity)
-            self.changePropagators.removeAtIndex(0)
+            self.changePropagators.remove(at: 0)
             
         }
         
         if (changePropagator != nil) {
             
             switch (direction) {
-            case .Up :
+            case .up :
                 if (self.position.y >= changePropagator!.location.y) {
                     runChangePropagator(changePropagator!)
                 }
                 
-            case .Down :
+            case .down :
                 if (self.position.y <= changePropagator!.location.y) {
                     runChangePropagator(changePropagator!)
                 }
                 
-            case .Right :
+            case .right :
                 if (self.position.x >= changePropagator!.location.x) {
                     runChangePropagator(changePropagator!)
                 }
                 
-            case .Left :
+            case .left :
                 if (self.position.x <= changePropagator!.location.x) {
                     runChangePropagator(changePropagator!)
                 }
@@ -330,20 +354,20 @@ class SnakeUnit: SKSpriteNode {
         
     }
     
-    func destroy(completion: () -> Void) {
+    func destroy(_ completion: () -> Void) {
         
         // Do stuff to destroy
         //self.physicsBody?.affectedByGravity = true
-        self.physicsBody?.collisionBitMask |= PhysicsCategory.Snake.rawValue | PhysicsCategory.Wall.rawValue
-        self.physicsBody?.contactTestBitMask = PhysicsCategory.None.rawValue
+        self.physicsBody?.collisionBitMask |= PhysicsCategory.snake.rawValue | PhysicsCategory.wall.rawValue
+        self.physicsBody?.contactTestBitMask = PhysicsCategory.none.rawValue
         self.physicsBody?.allowsRotation = true
         //self.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
         
         // Apply random impulse vector
         //self.physicsBody?.applyImpulse(CGVector(dx: 1.0, dy: 1.0))
         
-        let fadeOutAction = SKAction.fadeOutWithDuration(5.0)
-        self.runAction(fadeOutAction, completion: { () -> Void in
+        let fadeOutAction = SKAction.fadeOut(withDuration: 5.0)
+        self.run(fadeOutAction, completion: { () -> Void in
             self.removeFromParent()
         })
         

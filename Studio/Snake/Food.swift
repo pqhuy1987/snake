@@ -10,7 +10,7 @@ import SpriteKit
 
 class Food: SKSpriteNode, PhysicsScaling {
     
-    private struct ClassVariables {
+    fileprivate struct ClassVariables {
         static var physicsScalingFactor : CGFloat = CGFloat(1.0)
     }
    
@@ -21,13 +21,13 @@ class Food: SKSpriteNode, PhysicsScaling {
         //self.size = size
         //self.color =
         
-        let physicsBody = SKPhysicsBody(rectangleOfSize: size)
+        let physicsBody = SKPhysicsBody(rectangleOf: size)
         physicsBody.mass = 1.0
         physicsBody.allowsRotation = false
-        physicsBody.collisionBitMask = PhysicsCategory.Wall.rawValue
-        physicsBody.categoryBitMask = PhysicsCategory.Food.rawValue
-        physicsBody.contactTestBitMask = PhysicsCategory.Snake.rawValue | PhysicsCategory.Wall.rawValue
-        physicsBody.fieldBitMask = PhysicsCategory.None.rawValue
+        physicsBody.collisionBitMask = PhysicsCategory.wall.rawValue
+        physicsBody.categoryBitMask = PhysicsCategory.food.rawValue
+        physicsBody.contactTestBitMask = PhysicsCategory.snake.rawValue | PhysicsCategory.wall.rawValue
+        physicsBody.fieldBitMask = PhysicsCategory.none.rawValue
         physicsBody.affectedByGravity = false
         physicsBody.usesPreciseCollisionDetection = true
         physicsBody.restitution = 0.4
@@ -37,13 +37,13 @@ class Food: SKSpriteNode, PhysicsScaling {
         
         let flameEmitterNode = SKEmitterNode(fileNamed: "FoodParticle2.sks")
         flameEmitterNode!.zPosition = -1
-        self.insertChild(flameEmitterNode!, atIndex: 0)
+        self.insertChild(flameEmitterNode!, at: 0)
         
         let baseNode = SKSpriteNode(texture: nil, color: self.color, size: size)
         self.addChild(baseNode)
         
         let cropNode = SKCropNode()
-        cropNode.maskNode = SKSpriteNode(color: UIColor.whiteColor(), size: size)
+        cropNode.maskNode = SKSpriteNode(color: UIColor.white, size: size)
         self.addChild(cropNode)
         
         let emitterNode = SKEmitterNode(fileNamed: "FoodParticle.sks")
@@ -57,7 +57,7 @@ class Food: SKSpriteNode, PhysicsScaling {
         let fieldNode = SKFieldNode.vortexField()
         fieldNode.strength = 0.0003
         fieldNode.falloff = 4
-        fieldNode.categoryBitMask = FieldCategory.Food.rawValue
+        fieldNode.categoryBitMask = FieldCategory.food.rawValue
         fieldNode.physicsBody = self.physicsBody!.copy() as? SKPhysicsBody
         self.addChild(fieldNode)
         
@@ -74,9 +74,9 @@ class Food: SKSpriteNode, PhysicsScaling {
     
     func destroy() {
         
-        let fadeOutAction = SKAction.fadeOutWithDuration(1.0)
+        let fadeOutAction = SKAction.fadeOut(withDuration: 1.0)
         
-        self.runAction(fadeOutAction, completion: { [unowned self] in
+        self.run(fadeOutAction, completion: { [unowned self] in
             
             self.removeFromParent()
             

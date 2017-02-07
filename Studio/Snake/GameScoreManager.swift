@@ -13,20 +13,20 @@ class GameScoreManager {
     
     class func highscore() -> Int {
         
-        let score : Int = NSUserDefaults.standardUserDefaults().integerForKey("hiscore")
+        let score : Int = UserDefaults.standard.integer(forKey: "hiscore")
         
         return score
         
     }
     
-    class func reportScore(score : Int) -> Bool {
+    class func reportScore(_ score : Int) -> Bool {
         
-        let oldHiScore = NSUserDefaults.standardUserDefaults().integerForKey("hiscore")
+        let oldHiScore = UserDefaults.standard.integer(forKey: "hiscore")
         
         if (score > oldHiScore) {
             
-            NSUserDefaults.standardUserDefaults().setInteger(score, forKey: "hiscore")
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.set(score, forKey: "hiscore")
+            UserDefaults.standard.synchronize()
             
             return true
             

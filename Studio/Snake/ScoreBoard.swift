@@ -22,14 +22,14 @@ class ScoreBoard: SKNode {
         scoreLabel = SKLabelNode(fontNamed: "04b03")
         scoreLabel.fontSize = fontSize
         scoreLabel.fontColor = UIColor(red: 0.2, green: 0.1, blue: 0.9, alpha: 1.0)
-        scoreLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
+        scoreLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.left
         self.addChild(scoreLabel)
         
         hiScoreLabel.text = "Hi Score"
         hiScoreLabel.fontSize = 12
         hiScoreLabel.position = CGPoint(x: 0, y: fontSize-4)
-        hiScoreLabel.fontColor = UIColor.blackColor()
-        hiScoreLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
+        hiScoreLabel.fontColor = UIColor.black
+        hiScoreLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.left
         self.addChild(hiScoreLabel)
         
     }
@@ -38,13 +38,13 @@ class ScoreBoard: SKNode {
         super.init(coder: aDecoder)
     }
     
-    func displayHiScore(score: Int) {
-        hiScoreLabel.hidden = false
+    func displayHiScore(_ score: Int) {
+        hiScoreLabel.isHidden = false
         scoreLabel.text = stringFromScore(score)
     }
     
     func reset() {
-        hiScoreLabel.hidden = true
+        hiScoreLabel.isHidden = true
         score = 0
         scoreLabel.text = stringFromScore(score)
         updatePhysicsBody()
@@ -54,15 +54,15 @@ class ScoreBoard: SKNode {
     func updatePhysicsBody() {
         
         let size = self.calculateAccumulatedFrame().size
-        let physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: size.width*2, height: size.height*2))
-        physicsBody.categoryBitMask = PhysicsCategory.None.rawValue
-        physicsBody.dynamic = false
+        let physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: size.width*2, height: size.height*2))
+        physicsBody.categoryBitMask = PhysicsCategory.none.rawValue
+        physicsBody.isDynamic = false
         
         self.physicsBody = physicsBody
         
     }
     
-    func addToScore(points: Int) {
+    func addToScore(_ points: Int) {
         
         // Set score label
         score += points
@@ -72,7 +72,7 @@ class ScoreBoard: SKNode {
         
     }
     
-    func stringFromScore(score : Int) -> String {
+    func stringFromScore(_ score : Int) -> String {
         
         return String(format: "%04d", score)
         

@@ -15,13 +15,13 @@ class Wall: SKSpriteNode {
         super.init(texture: nil, color: UIColor(red: 0.2, green: 0.1, blue: 0.9, alpha: 1.0), size: size)
         
         // Set up edge physics body
-        var edgeStartPoint : CGPoint = CGPointZero
-        var edgeEndPoint : CGPoint = CGPointZero
+        var edgeStartPoint : CGPoint = CGPoint.zero
+        var edgeEndPoint : CGPoint = CGPoint.zero
         
         // If horizontal wall and non inverted
         if (size.width >= size.height && !inverted) {
-            edgeStartPoint = CGPointMake(-size.width/2.0, 0)
-            edgeEndPoint = CGPointMake(size.width/2.0, 0)
+            edgeStartPoint = CGPoint(x: -size.width/2.0, y: 0)
+            edgeEndPoint = CGPoint(x: size.width/2.0, y: 0)
         }
         
         // Horizontal wall, inverted
@@ -32,20 +32,20 @@ class Wall: SKSpriteNode {
         
         // Vertical wall and non inverted
         if (size.width < size.height && !inverted) {
-            edgeStartPoint = CGPointMake(0, -size.height/2.0)
-            edgeEndPoint = CGPointMake(0, size.height/2.0)
+            edgeStartPoint = CGPoint(x: 0, y: -size.height/2.0)
+            edgeEndPoint = CGPoint(x: 0, y: size.height/2.0)
         }
         
         // Vertical wall and inverted
         if (size.width < size.height && inverted) {
-            edgeStartPoint = CGPointMake(size.width, -size.height/2.0)
-            edgeEndPoint = CGPointMake(size.width, size.height/2.0)
+            edgeStartPoint = CGPoint(x: size.width, y: -size.height/2.0)
+            edgeEndPoint = CGPoint(x: size.width, y: size.height/2.0)
         }
         
-        let physicsBody = SKPhysicsBody(edgeFromPoint: edgeStartPoint, toPoint: edgeEndPoint)
+        let physicsBody = SKPhysicsBody(edgeFrom: edgeStartPoint, to: edgeEndPoint)
         
-        physicsBody.categoryBitMask = PhysicsCategory.Wall.rawValue
-        physicsBody.collisionBitMask = PhysicsCategory.Food.rawValue | PhysicsCategory.Snake.rawValue
+        physicsBody.categoryBitMask = PhysicsCategory.wall.rawValue
+        physicsBody.collisionBitMask = PhysicsCategory.food.rawValue | PhysicsCategory.snake.rawValue
         //physicsBody.contactTestBitMask = PhysicsCategory.Snake.rawValue
         physicsBody.usesPreciseCollisionDetection = true
         physicsBody.friction = 0.1

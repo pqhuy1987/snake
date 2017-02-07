@@ -14,21 +14,21 @@ protocol PhysicsScaling {
 }
 
 enum PhysicsCategory : UInt32 {
-    case None   = 0
-    case All    = 0xFFFFFFFF
-    case Snake = 0b0010
-    case Food = 0b0100
-    case Other = 0b1000
-    case Coin = 0b1010
-    case Block = 0b1100
-    case Wall = 0b11101
+    case none   = 0
+    case all    = 0xFFFFFFFF
+    case snake = 0b0010
+    case food = 0b0100
+    case other = 0b1000
+    case coin = 0b1010
+    case block = 0b1100
+    case wall = 0b11101
 }
 
 enum FieldCategory : UInt32 {
-    case None   = 0
-    case ALL    = 0xFFFFFFFF
-    case Snake = 0b001
-    case Food = 0b010
+    case none   = 0
+    case all    = 0xFFFFFFFF
+    case snake = 0b001
+    case food = 0b010
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -42,8 +42,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var bottomWall : Wall!
     
     var titleFood : Food!
-    var snakeStartPoint : CGPoint = CGPointZero
-    var foodStartPoint : CGPoint = CGPointZero
+    var snakeStartPoint : CGPoint = CGPoint.zero
+    var foodStartPoint : CGPoint = CGPoint.zero
     var scoreBoard : ScoreBoard = ScoreBoard()
     let titleNode = SKNode()
     let cloudParticleEmitter = SKEmitterNode(fileNamed: "Cloud.sks")
@@ -74,7 +74,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var panGestureRecognizer = UIPanGestureRecognizer()
     var tapGestureRecognizer = UITapGestureRecognizer()
     
-    override func didMoveToView(view: SKView) {
+    override func didMove(to view: SKView) {
         
         setupDeviceDependentVariables()
         setupWorld()
@@ -121,11 +121,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         titleLabel.text = "Snake"
         
         //titleLabel.position = CGPoint(x: self.frame.size.width/2.0, y: 3*self.frame.size.height/4.0)
-        let blinkOutAction = SKAction.fadeOutWithDuration(0.1)
-        let blinkInAction = SKAction.fadeInWithDuration(0.1)
-        let blinkSequence = SKAction.sequence([SKAction.waitForDuration(0.7), blinkOutAction, SKAction.waitForDuration(0.3), blinkInAction])
-        let blinkAction = SKAction.repeatActionForever(blinkSequence)
-        titleLabel.runAction(blinkAction)
+        let blinkOutAction = SKAction.fadeOut(withDuration: 0.1)
+        let blinkInAction = SKAction.fadeIn(withDuration: 0.1)
+        let blinkSequence = SKAction.sequence([SKAction.wait(forDuration: 0.7), blinkOutAction, SKAction.wait(forDuration: 0.3), blinkInAction])
+        let blinkAction = SKAction.repeatForever(blinkSequence)
+        titleLabel.run(blinkAction)
         
         titleNode.addChild(titleLabel)
         titleNode.position = CGPoint(x: self.frame.size.width/2.0, y: 3*self.frame.size.height/4.0)
@@ -134,27 +134,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         (snakeStartPoint, foodStartPoint) = setupTutorialSprites()
         self.addChild(tutorialNode)
         
-        cloudParticleEmitter!.position = CGPointMake(self.frame.size.width/2.0, self.frame.size.height/2.0)
-        cloudParticleEmitter!.fieldBitMask = FieldCategory.Snake.rawValue | FieldCategory.Food.rawValue
+        cloudParticleEmitter!.position = CGPoint(x: self.frame.size.width/2.0, y: self.frame.size.height/2.0)
+        cloudParticleEmitter!.fieldBitMask = FieldCategory.snake.rawValue | FieldCategory.food.rawValue
         cloudParticleEmitter!.particlePositionRange = CGVector(dx: self.frame.size.width, dy: self.frame.size.height)
         cloudParticleEmitter!.zPosition = -1
         self.addChild(cloudParticleEmitter!)
         
         // Add walls
         leftWall = Wall(size: CGSize(width: 2, height: self.frame.size.height), inverted: false)
-        leftWall.position = CGPointMake(0, frame.size.height/2.0)
+        leftWall.position = CGPoint(x: 0, y: frame.size.height/2.0)
         self.addChild(leftWall)
         
         rightWall = Wall(size: CGSize(width: 2, height: self.frame.size.height), inverted: true)
-        rightWall.position = CGPointMake(frame.size.width, frame.size.height/2.0)
+        rightWall.position = CGPoint(x: frame.size.width, y: frame.size.height/2.0)
         self.addChild(rightWall)
         
         topWall = Wall(size: CGSize(width: self.frame.size.width, height: 2.0), inverted: true)
-        topWall.position = CGPointMake(frame.size.width/2.0, frame.size.height)
+        topWall.position = CGPoint(x: frame.size.width/2.0, y: frame.size.height)
         self.addChild(topWall)
         
         bottomWall = Wall(size: CGSize(width: self.frame.size.width, height: 2.0), inverted: false)
-        bottomWall.position = CGPointMake(frame.size.width/2.0, 0)
+        bottomWall.position = CGPoint(x: frame.size.width/2.0, y: 0)
         self.addChild(bottomWall)
         
         let rect = scoreBoard.calculateAccumulatedFrame()
@@ -174,34 +174,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         handSprite.size = CGSize(width: 72, height: 72)
         handSprite.alpha = 0.0
-        let fadeInAction = SKAction.fadeInWithDuration(0.1)
-        let fadeOutAction = SKAction.fadeOutWithDuration(0.1)
-        let moveRightStartAction = SKAction.moveTo(CGPoint(x: -50, y: 0.0), duration: 0.0)
-        let moveRightEndAction = SKAction.moveTo(CGPoint(x: 50, y: 0.0), duration: 1.0)
+        let fadeInAction = SKAction.fadeIn(withDuration: 0.1)
+        let fadeOutAction = SKAction.fadeOut(withDuration: 0.1)
+        let moveRightStartAction = SKAction.move(to: CGPoint(x: -50, y: 0.0), duration: 0.0)
+        let moveRightEndAction = SKAction.move(to: CGPoint(x: 50, y: 0.0), duration: 1.0)
         let moveRightAction = SKAction.sequence([moveRightStartAction, fadeInAction, moveRightEndAction, fadeOutAction])
-        moveRightAction.timingMode = SKActionTimingMode.EaseOut
+        moveRightAction.timingMode = SKActionTimingMode.easeOut
         
-        let moveDownStartAction = SKAction.moveTo(CGPoint(x: 0, y: 10.0), duration: 0.0)
-        let moveDownEndAction = SKAction.moveTo(CGPoint(x: 0, y: -40), duration: 1.0)
+        let moveDownStartAction = SKAction.move(to: CGPoint(x: 0, y: 10.0), duration: 0.0)
+        let moveDownEndAction = SKAction.move(to: CGPoint(x: 0, y: -40), duration: 1.0)
         let moveDownAction = SKAction.sequence([moveDownStartAction, fadeInAction, moveDownEndAction, fadeOutAction])
-        moveDownAction.timingMode = .EaseOut
+        moveDownAction.timingMode = .easeOut
         
-        let moveLeftStartAction = SKAction.moveTo(CGPoint(x: 50, y: 0.0), duration: 0.0)
-        let moveLeftEndAction = SKAction.moveTo(CGPoint(x: -50, y: 0.0), duration: 1.0)
+        let moveLeftStartAction = SKAction.move(to: CGPoint(x: 50, y: 0.0), duration: 0.0)
+        let moveLeftEndAction = SKAction.move(to: CGPoint(x: -50, y: 0.0), duration: 1.0)
         let moveLeftAction = SKAction.sequence([moveLeftStartAction, fadeInAction, moveLeftEndAction, fadeOutAction])
-        moveLeftAction.timingMode = .EaseOut
+        moveLeftAction.timingMode = .easeOut
         
-        let moveUpStartAction = SKAction.moveTo(CGPoint(x: 0, y: -40), duration: 0.0)
-        let moveUpEndAction = SKAction.moveTo(CGPoint(x: 0, y: 10), duration: 1.0)
+        let moveUpStartAction = SKAction.move(to: CGPoint(x: 0, y: -40), duration: 0.0)
+        let moveUpEndAction = SKAction.move(to: CGPoint(x: 0, y: 10), duration: 1.0)
         let moveUpAction = SKAction.sequence([moveUpStartAction, fadeInAction, moveUpEndAction, fadeOutAction])
-        moveUpAction.timingMode = .EaseOut
+        moveUpAction.timingMode = .easeOut
         
-        let pauseAction = SKAction.waitForDuration(0.2)
+        let pauseAction = SKAction.wait(forDuration: 0.2)
         
         let handSequence = SKAction.sequence([moveRightAction, pauseAction, moveDownAction, pauseAction, moveLeftAction, pauseAction, moveUpAction, pauseAction])
         
-        let repeatingAction = SKAction.repeatActionForever(handSequence)
-        handSprite.runAction(repeatingAction)
+        let repeatingAction = SKAction.repeatForever(handSequence)
+        handSprite.run(repeatingAction)
         tutorialNode.addChild(handSprite)
         
         handText.text = "swipe anywhere to move"
@@ -229,7 +229,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         gameOverLabel.text = "Game Over"
         gameOverLabel.fontColor = UIColor(red: 0.2, green: 0.1, blue: 0.9, alpha: 1.0)
         
-        gameOverReason.fontColor = UIColor.blackColor()
+        gameOverReason.fontColor = UIColor.black
         gameOverReason.fontSize = 18
         
         newHighScoreLabel.text = "New High Score!"
@@ -238,7 +238,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         newHighScoreLabel.addChild(highScoreParticleEmitter!)
         
         tapToContinueLabel.text = "Tap anywhere to continue"
-        tapToContinueLabel.fontColor = UIColor.blackColor()
+        tapToContinueLabel.fontColor = UIColor.black
         tapToContinueLabel.fontSize = 20
         
         tauntLabel.fontColor = UIColor(red: 0.2, green: 0.1, blue: 0.9, alpha: 1.0)
@@ -250,7 +250,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.view?.removeGestureRecognizer(tapGestureRecognizer)
         
-        NSNotificationCenter.defaultCenter().postNotificationName(GameViewControllerNotifications.didEnd, object: nil)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: GameViewControllerNotifications.didEnd), object: nil)
         
         // Clean up
         for food in destroyedFood {
@@ -270,12 +270,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Create snake
         snake = Snake(unitWidth: snakeUnitSize)
-        snake.position = tutorialNode.convertPoint(snakeStartPoint, toNode: self)
+        snake.position = tutorialNode.convert(snakeStartPoint, to: self)
         self.addChild(snake)
         
         // Create initial food
         titleFood = Food(rectOfSize: CGSize(width: foodUnitSize, height: foodUnitSize))
-        titleFood.position = tutorialNode.convertPoint(foodStartPoint, toNode: self)
+        titleFood.position = tutorialNode.convert(foodStartPoint, to: self)
         self.addChild(titleFood)
         
         // Reset score
@@ -283,10 +283,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreBoard.displayHiScore(GameScoreManager.highscore())
         
         // Reset walls, just in case
-        leftWall.position = CGPointMake(0, frame.size.height/2.0)
-        rightWall.position = CGPointMake(frame.size.width, frame.size.height/2.0)
-        topWall.position = CGPointMake(frame.size.width/2.0, frame.size.height)
-        bottomWall.position = CGPointMake(frame.size.width/2.0, 0)
+        leftWall.position = CGPoint(x: 0, y: frame.size.height/2.0)
+        rightWall.position = CGPoint(x: frame.size.width, y: frame.size.height/2.0)
+        topWall.position = CGPoint(x: frame.size.width/2.0, y: frame.size.height)
+        bottomWall.position = CGPoint(x: frame.size.width/2.0, y: 0)
         
         self.view?.addGestureRecognizer(panGestureRecognizer)
         
@@ -316,12 +316,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             self.food = titleFood//generateFoodInRect(CGRectInset(self.frame, foodUnitSize*2, foodUnitSize*2))!
             
-            NSNotificationCenter.defaultCenter().postNotificationName(GameViewControllerNotifications.didStart, object: nil)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: GameViewControllerNotifications.didStart), object: nil)
         }
         
     }
     
-    func gameOver(gameOverTip : String) {
+    func gameOver(_ gameOverTip : String) {
         
         print("game over")
         
@@ -338,7 +338,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         gameOverLabel.position = CGPoint(x: self.frame.size.width/2.0, y: 3*self.frame.size.height/4.0)
-        gameOverLabel.paused = false
+        gameOverLabel.isPaused = false
         gameOverLabel.alpha = 0.0
         self.addChild(gameOverLabel)
         
@@ -357,20 +357,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(tapToContinueLabel)
         
         // Fade in and scale up
-        let fadeInAction = SKAction.fadeInWithDuration(3.0)
-        let scaleAction = SKAction.scaleTo(1.1, duration: 3.0)
+        let fadeInAction = SKAction.fadeIn(withDuration: 3.0)
+        let scaleAction = SKAction.scale(to: 1.1, duration: 3.0)
         
         let groupAction = SKAction.group([fadeInAction, scaleAction])
         
         // Scale down
-        let scaleDownAction = SKAction.scaleTo(1.0, duration: 0.3)
+        let scaleDownAction = SKAction.scale(to: 1.0, duration: 0.3)
         
         let sequenceAction = SKAction.sequence([groupAction, scaleDownAction])
         
-        gameOverLabel.runAction(sequenceAction)
-        gameOverReason.runAction(fadeInAction)
-        tapToContinueLabel.runAction(fadeInAction)
-        tauntLabel.runAction(fadeInAction)
+        gameOverLabel.run(sequenceAction)
+        gameOverReason.run(fadeInAction)
+        tapToContinueLabel.run(fadeInAction)
+        tauntLabel.run(fadeInAction)
         
         musicPlayer.playEndFX()
         musicPlayer.playGameOverMusic()
@@ -381,13 +381,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             newHighScoreLabel.position = CGPoint(x: self.frame.size.width/2.0, y: tauntLabel.position.y-50)
             newHighScoreLabel.alpha = 0.0
             self.addChild(newHighScoreLabel)
-            newHighScoreLabel.runAction(fadeInAction)
+            newHighScoreLabel.run(fadeInAction)
             
         }
         
     }
     
-    func updateGameForScore(score: Int) {
+    func updateGameForScore(_ score: Int) {
         
         if (score > GameScoreManager.highscore()) {
             musicPlayer.prepareLevel2()
@@ -402,7 +402,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    func tauntForScore(score: Int) -> String {
+    func tauntForScore(_ score: Int) -> String {
         
         let randomValue = arc4random() % 100
         
@@ -451,7 +451,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //MARK: - Food -
     
-    func generateFoodInRect(rect : CGRect) -> Food? {
+    func generateFoodInRect(_ rect : CGRect) -> Food? {
         
         let point = searchForAvailableSpace(rect)
         if (point != nil) {
@@ -462,10 +462,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print("did generate food at point ", food)
             
             food.alpha = 0.0
-            let fadeInAction = SKAction.fadeInWithDuration(0.3)
+            let fadeInAction = SKAction.fadeIn(withDuration: 0.3)
             
             self.addChild(food)
-            food.runAction(fadeInAction)
+            food.run(fadeInAction)
             
             return food
             
@@ -475,7 +475,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    func searchForAvailableSpace(rect : CGRect) -> CGPoint? {
+    func searchForAvailableSpace(_ rect : CGRect) -> CGPoint? {
         
         let searchRectPadding = CGFloat(2.0)
         
@@ -493,7 +493,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             var bodyFound = false
             
-            self.physicsWorld.enumerateBodiesInRect(searchRect, usingBlock: { (physicsBody, _) -> Void in
+            self.physicsWorld.enumerateBodies(in: searchRect, using: { (physicsBody, _) -> Void in
                 
                 if (physicsBody.node != self) {
                     
@@ -509,18 +509,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 point.x += searchWidth
                 
                 // If search rect goes beyond rect width
-                if (point.x + searchWidth > CGRectGetMaxX(rect)) {
+                if (point.x + searchWidth > rect.maxX) {
                     
-                    point.x = CGRectGetMinX(rect)
+                    point.x = rect.minX
                     point.y += searchWidth
                     searchDistance += searchWidth
                     
                 }
                 
                 // If search rect goes beyond rect height
-                if (point.y + searchWidth > CGRectGetMaxY(rect)) {
+                if (point.y + searchWidth > rect.maxY) {
                     
-                    point.y = CGRectGetMinY(rect)
+                    point.y = rect.minY
                     
                 }
                 
@@ -549,12 +549,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    func randomPointInRect(rect : CGRect) -> CGPoint {
+    func randomPointInRect(_ rect : CGRect) -> CGPoint {
         
-        let maxX = UInt32(CGRectGetMaxX(rect))
-        let minX = UInt32(CGRectGetMinX(rect))
-        let maxY = UInt32(CGRectGetMaxY(rect))
-        let minY = UInt32(CGRectGetMinY(rect))
+        let maxX = UInt32(rect.maxX)
+        let minX = UInt32(rect.minX)
+        let maxY = UInt32(rect.maxY)
+        let minY = UInt32(rect.minY)
         
         let x = Int(((arc4random() % maxX) + minX))
         let y = Int(((arc4random() % maxY) + minY))
@@ -565,9 +565,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //MARK: - Gesture Recognizers -
     
-    func panGestureRecognized(sender: UIPanGestureRecognizer) {
+    func panGestureRecognized(_ sender: UIPanGestureRecognizer) {
         
-        if (sender.state == UIGestureRecognizerState.Ended) {
+        if (sender.state == UIGestureRecognizerState.ended) {
             
             startGame()
             
@@ -585,24 +585,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
             }
             
-            let velocityInView : CGPoint = sender.velocityInView(self.view!)
+            let velocityInView : CGPoint = sender.velocity(in: self.view!)
             
             
             
             if (fabs(velocityInView.x) >= fabs(velocityInView.y)) {
                 
                 if (velocityInView.x > 0) {
-                    snake.move(Direction.Right, velocity: newVelocity)
+                    snake.move(Direction.right, velocity: newVelocity)
                 } else {
-                    snake.move(Direction.Left, velocity: newVelocity)
+                    snake.move(Direction.left, velocity: newVelocity)
                 }
                 
             } else {
                 
                 if (velocityInView.y > 0) {
-                    snake.move(Direction.Down, velocity: newVelocity)
+                    snake.move(Direction.down, velocity: newVelocity)
                 } else {
-                    snake.move((Direction.Up), velocity: newVelocity)
+                    snake.move((Direction.up), velocity: newVelocity)
                 }
                 
             }
@@ -611,7 +611,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    func tapGestureRecognized(sender: UITapGestureRecognizer) {
+    func tapGestureRecognized(_ sender: UITapGestureRecognizer) {
         
         //if (sender.state == UIGestureRecognizerState.Began) {
             
@@ -621,10 +621,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 // Pause the game
                 if let skView = self.view {
-                    skView.paused = true
+                    skView.isPaused = true
                 }
                 
-                NSNotificationCenter.defaultCenter().postNotificationName(GameViewControllerNotifications.shouldPause, object: self)
+                NotificationCenter.default.post(name: Notification.Name(rawValue: GameViewControllerNotifications.shouldPause), object: self)
                 
             } else {
                 
@@ -673,7 +673,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //MARK: - Game Loop -
    
-    override func update(currentTime: CFTimeInterval) {
+    override func update(_ currentTime: TimeInterval) {
         /* Called before each frame is rendered */
         
         if (self.food != nil) {
@@ -694,7 +694,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //MARK: - Collision Methods -
     
-    func snakeTouchedFood(food: Food, contact: SKPhysicsContact) {
+    func snakeTouchedFood(_ food: Food, contact: SKPhysicsContact) {
         
         //if (destroyedFood.contains(food)) {
           //  print("what?? we destroyed this already")
@@ -703,42 +703,42 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         //destroyedFood.append(food)
         
-        food.physicsBody?.collisionBitMask = PhysicsCategory.Wall.rawValue
-        food.physicsBody?.contactTestBitMask = PhysicsCategory.None.rawValue
+        food.physicsBody?.collisionBitMask = PhysicsCategory.wall.rawValue
+        food.physicsBody?.contactTestBitMask = PhysicsCategory.none.rawValue
         
-        let impulseVector = CGVectorMake(snake.headUnit.physicsBody!.velocity.dx, snake.headUnit.physicsBody!.velocity.dy)
+        let impulseVector = CGVector(dx: snake.headUnit.physicsBody!.velocity.dx, dy: snake.headUnit.physicsBody!.velocity.dy)
         
-        var snakeImpulseVector = CGVectorMake(0, 0)
+        var snakeImpulseVector = CGVector(dx: 0, dy: 0)
         let impulseMagnitude = CGFloat(5.0)
         if (impulseVector.dx > 0) {
-            snakeImpulseVector = CGVectorMake(impulseMagnitude, 0)
+            snakeImpulseVector = CGVector(dx: impulseMagnitude, dy: 0)
         } else if (impulseVector.dx < 0) {
-            snakeImpulseVector = CGVectorMake(-impulseMagnitude, 0)
+            snakeImpulseVector = CGVector(dx: -impulseMagnitude, dy: 0)
         } else if (impulseVector.dy > 0) {
-            snakeImpulseVector = CGVectorMake(0, impulseMagnitude)
+            snakeImpulseVector = CGVector(dx: 0, dy: impulseMagnitude)
         } else if (impulseVector.dy < 0) {
-            snakeImpulseVector = CGVectorMake(0, -impulseMagnitude)
+            snakeImpulseVector = CGVector(dx: 0, dy: -impulseMagnitude)
         }
         
         snake.headUnit.physicsBody?.applyImpulse(snakeImpulseVector)
         
         food.removeFromParent()
         
-        let action = SKAction.runBlock({ [unowned self] in
+        let action = SKAction.run({ [unowned self] in
             
             self.musicPlayer.playFX()
-            self.food = self.generateFoodInRect(CGRectInset(self.frame, self.foodUnitSize, self.foodUnitSize))
+            self.food = self.generateFoodInRect(self.frame.insetBy(dx: self.foodUnitSize, dy: self.foodUnitSize))
             self.snake.addUnit()
             self.scoreBoard.addToScore(1)
             self.updateGameForScore(self.scoreBoard.score)
             
         })
     
-        self.runAction(action)
+        self.run(action)
         
     }
     
-    func snakeTouchedWall(contact: SKPhysicsContact) {
+    func snakeTouchedWall(_ contact: SKPhysicsContact) {
         
         gameOver("Don't touch the walls!")
         
@@ -772,7 +772,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    func foodTouchedWall(contact: SKPhysicsContact) {
+    func foodTouchedWall(_ contact: SKPhysicsContact) {
         
         // Reflect food off wall
         
@@ -781,23 +781,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //MARK: - SKPhysicsWorldContactDelegate -
     
-    func didBeginContact(contact: SKPhysicsContact) {
+    func didBegin(_ contact: SKPhysicsContact) {
         
         // Snake + Wall
-        if (contact.bodyA.categoryBitMask == PhysicsCategory.Wall.rawValue && contact.bodyB.categoryBitMask == PhysicsCategory.Snake.rawValue) {
+        if (contact.bodyA.categoryBitMask == PhysicsCategory.wall.rawValue && contact.bodyB.categoryBitMask == PhysicsCategory.snake.rawValue) {
             
             snakeTouchedWall(contact)
             
         }
         
-        if (contact.bodyB.categoryBitMask == PhysicsCategory.Wall.rawValue && contact.bodyA.categoryBitMask == PhysicsCategory.Snake.rawValue) {
+        if (contact.bodyB.categoryBitMask == PhysicsCategory.wall.rawValue && contact.bodyA.categoryBitMask == PhysicsCategory.snake.rawValue) {
             
             snakeTouchedWall(contact)
             
         }
         
         // Snake + snake
-        if (contact.bodyA.categoryBitMask == PhysicsCategory.Snake.rawValue && contact.bodyB.categoryBitMask == PhysicsCategory.Snake.rawValue) {
+        if (contact.bodyA.categoryBitMask == PhysicsCategory.snake.rawValue && contact.bodyB.categoryBitMask == PhysicsCategory.snake.rawValue) {
             
             if (contact.bodyA.node == snake.headUnit && contact.bodyB.node != snake.headUnit.nextUnit) {
                 
@@ -815,7 +815,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         // Snake + Food
-        if (contact.bodyA.categoryBitMask == PhysicsCategory.Snake.rawValue && contact.bodyB.categoryBitMask == PhysicsCategory.Food.rawValue) {
+        if (contact.bodyA.categoryBitMask == PhysicsCategory.snake.rawValue && contact.bodyB.categoryBitMask == PhysicsCategory.food.rawValue) {
             
             //if (contact.bodyA.node == snake.headUnit) {
                 
@@ -829,7 +829,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         }
         
-        if (contact.bodyB.categoryBitMask == PhysicsCategory.Snake.rawValue && contact.bodyA.categoryBitMask == PhysicsCategory.Food.rawValue) {
+        if (contact.bodyB.categoryBitMask == PhysicsCategory.snake.rawValue && contact.bodyA.categoryBitMask == PhysicsCategory.food.rawValue) {
             
             //if (contact.bodyB.node == snake.headUnit) {
                 
@@ -844,7 +844,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         // Food + Wall
-        if (contact.bodyA.categoryBitMask == PhysicsCategory.Wall.rawValue && contact.bodyB.categoryBitMask == PhysicsCategory.Food.rawValue) {
+        if (contact.bodyA.categoryBitMask == PhysicsCategory.wall.rawValue && contact.bodyB.categoryBitMask == PhysicsCategory.food.rawValue) {
             
             
             

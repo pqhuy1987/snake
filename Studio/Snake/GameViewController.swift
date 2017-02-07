@@ -17,13 +17,13 @@ struct GameViewControllerNotifications {
 }
 
 extension SKNode {
-    class func unarchiveFromFile(file : NSString) -> SKNode? {
-        if let path = NSBundle.mainBundle().pathForResource(file as String, ofType: "sks") {
-            let sceneData = try! NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe)
-            let archiver = NSKeyedUnarchiver(forReadingWithData: sceneData)
+    class func unarchiveFromFile(_ file : NSString) -> SKNode? {
+        if let path = Bundle.main.path(forResource: file as String, ofType: "sks") {
+            let sceneData = try! Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+            let archiver = NSKeyedUnarchiver(forReadingWith: sceneData)
             
             archiver.setClass(self.classForKeyedUnarchiver(), forClassName: "SKScene")
-            let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as! GameScene
+            let scene = archiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey) as! GameScene
             archiver.finishDecoding()
             return scene
         } else {
@@ -36,12 +36,12 @@ class GameViewController: UIViewController {
     
     @IBOutlet weak var skView : SKView!
     
-    func gameDidStart(sender : AnyObject) {
+    func gameDidStart(_ sender : AnyObject) {
         
         
     }
     
-    func gameDidEnd(sender : AnyObject) {
+    func gameDidEnd(_ sender : AnyObject) {
         
         
     }
@@ -49,16 +49,16 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameViewController.gameDidStart(_:)), name: GameViewControllerNotifications.didStart, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(GameViewController.gameDidStart(_:)), name: NSNotification.Name(rawValue: GameViewControllerNotifications.didStart), object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameViewController.gameDidEnd(_:)), name: GameViewControllerNotifications.didEnd, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(GameViewController.gameDidEnd(_:)), name: NSNotification.Name(rawValue: GameViewControllerNotifications.didEnd), object: nil)
         
         
     }
     
     deinit {
         
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
         
     }
     
@@ -77,7 +77,7 @@ class GameViewController: UIViewController {
                 
                 /* Set the scale mode to scale to fit the window */
                 scene.size = self.skView.bounds.size
-                scene.scaleMode = SKSceneScaleMode.Fill
+                scene.scaleMode = SKSceneScaleMode.fill
                 
                 self.skView.presentScene(scene)
                 
@@ -87,12 +87,12 @@ class GameViewController: UIViewController {
         
     }
 
-    override func shouldAutorotate() -> Bool {
+    override var shouldAutorotate : Bool {
         return false
     }
 
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.Portrait
+    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.portrait
     }
 
     override func didReceiveMemoryWarning() {
@@ -100,7 +100,7 @@ class GameViewController: UIViewController {
         // Release any cached data, images, etc that aren't in use.
     }
 
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     
